@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <title>PA DOCN</title>
+	<!-- jQuery -->
+	<script src="../../assets/js/jquery-2.2.4.min.js"></script>
+	
+	<!-- Bootstrap -->
+	<script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/docn.css" type="text/css">
+</head>
+<body>
+<div class="container">
+<!--  row -->
+	<div class="row">
+	    <div class="col-sm-3">
+		     <br><p><a href="../index.html"><span class="glyphicon glyphicon-home "></span></a></p>
+	    </div>
+	    <div class="col-sm-9">
+		    <h2 id="titre">Pa par Groupe Alerte et par Statut</h2>
+			<p id="t"></p>
+		</div>
+	</div>
+<!--  row -->
+  <div class="row">
+    <div class="col-sm-8">
+	    <table id="countPaParGaParStatut" class="table table-hover table-condensed">
+			  <tr>
+			    <th>PA</th>
+			    <th>NOUVEAU</th>
+			    <th>SOUMIS</th>
+			    <th>NOTIFIE</th>
+			    <th>APPROUVE</th> 
+			  </tr>
+		</table>
+    </div>
+    <div class="col-sm-4">
+    </div>
+  </div>
+</div>
+
+
+<script src="../../../assets/js/jquery-2.2.4.min.js"></script>
+<script src="../js/docn.js"></script>
+<script>
+$(document).ready(function(){
+	$.getJSON('../contr/getCountPaParGaParStatut.php', function(data) {
+		var table=document.getElementById("countPaParGaParStatut");
+	    $.each(data, function(index, element) {
+	    	el= new Array(element.ga, element.NOUVEAU, element.SOUMIS, element.NOTIFIE, element.APPROUVE);
+	    	addRowLinkStatutPa(table, 'pa', el, 'lstPaEcheances.html?ga=', el[0]);
+	    });
+	});
+});
+</script>
+</body>
+</html>
+  

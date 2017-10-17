@@ -1,0 +1,43 @@
+body {
+      font: 400 11px Helvetica, sans-serif;
+      font-size: 11px;}
+
+table, td {
+	text-align:left;
+	font-size: 12px;
+	line-height: 5;
+	padding: 5px;
+}
+
+th {
+	text-align:center;
+}
+.fixed-table-container tbody td .th-inner, .fixed-table-container thead th .th-inner {  
+    line-height: 20%;
+}
+
+.table > tbody > tr > th, .table > tfoot > tr > th, .table > thead > tr > th {
+    max-width: 1px;
+}
+  
+.btn{ font-size: 11px;}
+.label{ font-size: 11px;} 
+.glyphicon {
+    font-size: 20px;
+} 
+
+h1 {text-align:center;}
+h1 {font-size: 12px;}
+.logo-small {
+      color: #f4511e;
+      font-size: 50px;}
+.logo-small-red {
+      color: #f4511e;
+      font-size: 50px;}
+.logo-small-green {
+      color: #15fe58;
+      font-size: 50px;}
+      
+.pcigreen {background-color: rgb(80, 158, 47);} 
+.pcired {background-color: rgb(254, 88, 21);}
+.pciorange {background-color: rgb(255, 160, 47);}

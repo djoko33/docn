@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/docn.css" type="text/css">
+	<title>Indicateurs</title>
+</head>
+<body>
+<div class="container">
+<!--  row -->
+<div class="row">
+    <div class="col-sm-3">
+	     <br><p><a href="../index.html"><span class="glyphicon glyphicon-home"></span></a></p>
+    </div>
+    <div class="col-sm-9">
+	    <h2 id="titre">INDICATEURS</h2>
+    </div>
+</div>
+<!--  row -->
+<br>
+<div class="row">
+    <div class="col-sm-5">
+    	<p>Indicateurs PA</p>
+	     <table id="lstPaGlob" class="table table-hover table-condensed">
+		  <tr>
+		    <th><span class="label label-primary">Total</span></th>
+		    <th><span class="label label-danger">En Retard</span></th>
+		    <th><span class="label label-warning">Dans 1 mois</span></th>
+		    <th><span class="label label-info">Dans 3 mois</span></th>
+		    <th><span class="label label-default">Plus de 3 mois</span></th>
+		  </tr>
+		</table>
+		<br>
+		<p>Indicateurs Actions</p>
+	     <table id="lstActionsGlob" class="table table-hover table-condensed">
+		  <tr>
+		    <th><span class="label label-primary">Total</span></th>
+		    <th><span class="label label-danger">En Retard</span></th>
+		    <th><span class="label label-warning">Dans 1 mois</span></th>
+		    <th><span class="label label-info">Dans 3 mois</span></th>
+		    <th><span class="label label-default">Plus de 3 mois</span></th>
+		  </tr>
+		</table>
+		<br>
+		<p>Indicateurs Analyses d'Impact</p>
+		<p id='analyseImpact'></p>
+    </div>
+    <br>
+    <div class="col-sm-7">
+	    <table id="lstPaRetard" class="table table-hover table-condensed">
+		  <tr>
+		    <th>Nb de Pa par GA</th>
+		    <th><span class="label label-danger">En Retard</span></th>
+		    <th><span class="label label-warning">Dans 1 mois</span></th>
+		    <th><span class="label label-info">Dans 3 mois</span></th>
+		    <th><span class="label label-default">Plus de 3 mois</span></th>
+		  </tr>
+		</table>
+    </div>
+<p id="titre"></p>
+</div>
+<!--  row -->
+</div>
+<!-- js -->
+<script src="../../assets/js/jquery-2.2.4.min.js"></script>
+<script src="../js/docn.js"></script>
+<!-- Bootstrap -->
+<script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+
+<script>
+$(document).ready(function() {
+	$.getJSON('../contr/getPaParEch.php', function(data) {
+		var table=document.getElementById('lstPaRetard');
+	    $.each(data, function(index, element) {
+	    	el= new Array(element.ga, element.retard, element.m1, element.m3, element.plus3);
+	    	addRowLink(table, 'pa', el, 'lstPaEcheances.html?ga='+el[0]);
+	    });
+	});
+	$.getJSON('../contr/getPaGlob.php', function(data) {
+		var table=document.getElementById('lstPaGlob');
+		el= new Array(data.tot, data.retard, data.m1, data.m3, data.plus3);
+	    addRow(table, el);
+	    });
+	$.getJSON('../contr/getActionsGlob.php', function(data) {
+		var table=document.getElementById('lstActionsGlob');
+		el= new Array(data.tot, data.retard, data.m1, data.m3, data.plus3);
+	    addRow(table, el);
+	    });
+	$.getJSON('../contr/getAnalyseImpact.php', function(data) {
+		$('#analyseImpact').html(data.tot+' analyses en retard');
+	    });
+});
+
+  </script>
+</body>
+</html>

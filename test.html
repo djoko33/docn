@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+	<link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+<title>Insert title here</title>
+</head>
+<body>
+<p id="message"><p>
+<table id="countPaParGaParStatut" class="table table-hover table-condensed">
+  <tr>
+    <th>GA</th>
+    <th>NOUVEAU</th>
+    <th>SOUMIS</th>
+    <th>NOTIFIE</th>
+    <th>APPROUVE</th> 
+  </tr>
+</table>
+
+<table id="countPaParGa" class="table table-hover table-condensed">
+  <tr>
+    <th>GA</th>
+    <th>Nb</th> 
+  </tr>
+</table>
+<script src="../../assets/js/jquery-2.2.4.min.js"></script>
+<!-- Bootstrap -->
+<script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+
+<script>
+
+$(document).ready(function() {
+	
+function addRow2Cols(table, a, b){
+	var row=table.insertRow();
+	var x=row.insertCell(0);
+	var y=row.insertCell(1);
+	var xValue = document.createTextNode(a);
+	  x.appendChild(xValue);
+	var yValue = document.createTextNode(b);
+	  y.appendChild(yValue);
+}
+//TODO factoriser
+function addRow5Cols(table, a, b, c, d, e){
+	var row=table.insertRow();
+	var link=document.createElement("a");
+	link.setAttribute('href', 'vue/lstPa.html?ga='+a);
+	var xValue = document.createTextNode(a);
+	link.appendChild(xValue);
+	var x=row.insertCell(0);
+	x.appendChild(link);
+	var y=row.insertCell(1);	  
+	x.prepend(link);
+	var yValue = document.createTextNode(b);
+	  y.appendChild(yValue);
+	var xx=row.insertCell(2);
+	var yy=row.insertCell(3);
+	var xxValue = document.createTextNode(c);
+	  xx.appendChild(xxValue);
+	var yyValue = document.createTextNode(d);
+	  yy.appendChild(yyValue);
+	var xxx=row.insertCell(4);  
+	var xxxValue = document.createTextNode(e);
+	  xxx.appendChild(xxxValue);
+}
+
+$.getJSON('contr/getCountPaParGa.php', function(data) {
+	var table=document.getElementById("countPaParGa");
+    $.each(data, function(index, element) {
+    	addRow2Cols(table, element.ga, element.nb);
+    });
+});
+$.getJSON('contr/getCountPaParGaParStatut.php', function(data) {
+	var table=document.getElementById("countPaParGaParStatut");
+    $.each(data, function(index, element) {
+    	addRow5Cols(table, element.ga, element.NOUVEAU, element.SOUMIS, element.NOTIFIE, element.APPROUVE);
+    });
+
+});
+});
+  </script>
+</body>
+</html>

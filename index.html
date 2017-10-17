@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=9">
+	<title>PA DOCN</title>
+	<link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/docn.css" type="text/css">
+</head>
+<body>
+<nav class="navbar navbar-default navbar-static-top">
+<div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#myPage"></a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+
+      <ul class="nav navbar-nav navbar-left">
+        <li>
+        	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Indicateurs<span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+					<li><a href="vue/indicateurs.html">Indicateurs ILD</a></li>
+					<li><a href="vue/paStatut.html" >PA par Statut</a></li>
+					<li><a href="vue/actionsStatut.html" >Actions par Statut</a></li>
+				</ul>
+        </li>
+        <li>
+            <a href="vue/paStatut.html" >PA par Statut</a>
+        </li>
+        <li>
+            <a href="vue/actionsStatut.html" >Actions par Statut</a>
+        </li>		
+        <li>
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">PA par Groupe<span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu" id="dropGroups">
+                	<!-- Liste des groupes responsables de PA -->
+                </ul> 
+        </li>			
+      	<li>
+      		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">PA par Service<span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu">
+					<li class="dropdown-submenu"><a href="#"></a>
+								<ul class="dropdown-menu">
+									<li><a href=""></a></li>
+								</ul>
+					</li>                
+                </ul>
+      	</li>
+      	<li>
+      		<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Actions Par Pilote<span class="caret"></span></a>
+                <ul class="dropdown-menu" role="menu" id="dropAffecte">
+         			<!-- Liste des personnes responsables d'actions -->
+                </ul>
+      	</li>
+      </ul>
+     <form class="navbar-form navbar-right" action="./vue/lstPaMotCle.html" method="get">
+        <div class="form-group">
+          <input type="text" name="mot" class="form-control" placeholder="Mot cle">
+        </div>
+        <button type="submit" class="btn btn-default">Cherche</button>
+      </form>
+    </div>
+	</div>
+	
+</nav>
+
+<div class="container">
+<!--  row -->
+  <div class="row">
+  
+    <div class="col-sm-10">
+    <h3>Les nouveaux PA</h3>
+    	<table id="lstDerniersPa" class="table table-hover table-condensed">
+		  <tr>
+		    <th>PA</th>
+		    <th>DISC</th>
+		    <th>LIBELLE</th>
+		    <th>CREATION</th>
+		    <th>ECHEANCE</th>
+		    <th>STATUT</th> 
+		  </tr>
+		</table>
+    </div>
+    <div class="col-sm-2">
+    </div>
+  </div>
+<!--  row -->
+<!--  row -->
+  <div class="row">
+  
+    <div class="col-sm-10">
+    <h3>Les actions les plus en retard</h3>
+	<table id="lstActionsRetard" class="table table-hover table-condensed">
+	  <tr>
+	    <th>PA</th>
+	    <th>N</th>
+	    <th>DISC</th>
+	    <th>GA SEC</th>
+	    <th>LIBELLE</th>
+	    <th>STATUT</th>
+	    <th>ECHEANCE</th>
+	    <th></th> 
+	  </tr>
+	</table>
+    </div>
+    <div class="col-sm-2">
+    </div>
+  </div>
+  <!-- Modal -->
+<div class="modal fade" id="modLstActions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <table id="lstActions" class="table table-hover table-condensed"></table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Notes -->
+<div class="modal fade" id="modLstNotes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <table id="lstNotes" class="table table-hover table-condensed"></table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<script src="../../assets/js/jquery-2.2.4.min.js"></script>
+	<!-- Bootstrap -->
+<script src="../assets/bootstrap/js/bootstrap.min.js"></script>
+<script src="js/docn.js"></script>
+<script>
+$(document).ready(function(){
+	$.getJSON('contr/getGaResponsPA.php', function(data) {
+	    $.each(data, function(index, element) {
+	        $('#dropGroups').append('<li><a href="./vue/lstPaEcheances.html?ga='+element.ga+'">'+element.ga+'</a></li>');
+			  });
+	});
+	$.getJSON('contr/getAffecteActions.php', function(data) {
+	    $.each(data, function(index, element) {
+	        $('#dropAffecte').append('<li><a href="./vue/lstActionsAffectees.html?nom='+element.nom+'">'+element.nom+'</a></li>');
+			  });
+	});
+	$.getJSON('contr/getDerniersPa.php', function(data) {
+		var table=document.getElementById("lstDerniersPa");
+	    $.each(data, function(index, element) {
+	    	el= new Array(element.num, element.disc, element.libelle, element.creation, element.echeance, element.statut);
+	    	var url = 'https://prod-sdin.edf.fr/eam/domain/startflow.do?IFA_FAVORITE=true&IFA_FLOW_NAME=PassPortPanel&panelid=TIMA010&keydata=';
+	    	var ch = '00000000'+el[0];
+	    	addRowLinkButton(table, 'pa', el, url+ch.slice(-8), el[0], '#modLstActions', '#modLstNotes');
+	    });
+	});
+	$.getJSON('contr/getActionsRetard.php', function(data) {
+		var table=document.getElementById("lstActionsRetard");
+	    $.each(data, function(index, element) {
+	    	el= new Array(element.pa, element.num, element.disc, element.gaprimaire, element.libelle, element.statut, element.echeance);
+	    	var url = 'https://prod-sdin.edf.fr/eam/domain/startflow.do?IFA_FAVORITE=true&IFA_FLOW_NAME=PassPortPanel&panelid=TIMA010&keydata=';
+	    	var ch = '00000000'+el[0];
+	    	addRowLinkButtonActions(table, 'pa', el, url+ch.slice(-8), el[0], '#modLstNotes');
+	    });
+	});
+	$('#modLstActions').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget) 
+		  var pa = button.data('whatever') 
+		  var modal = $(this)
+		  modal.find('.modal-title').text('PA : ' + pa);
+		  $.getJSON('contr/getActionsParPa.php?pa='+pa, function(data) {
+				var table=document.getElementById("lstActions");
+				th = new Array('Num.', 'Libelle', 'echeance', 'GA princ.', 'GA Second.');
+		    	addTh(table, th, 'thAction');
+		    	var table=document.getElementById("lstActions");
+			    $.each(data, function(index, element) {
+			    	el= new Array(element.num, element.libelle, element.echeance, element.gaprimaire, element.gasecondaire);
+			    	addRowLink(table, 'action', el, 'url&pa=');
+			    });
+			});
+		});
+	$('#modLstActions').on('hidden.bs.modal', function (e) {
+		$('.action').remove();
+		$('.thAction').remove();
+		});
+	$('#modLstNotes').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget) 
+		  var pa = button.data('whatever') 
+		  var modal = $(this)
+		  modal.find('.modal-title').text('PA : ' + pa);
+		  $.getJSON('contr/getNotesParPa.php?pa='+pa, function(data) {
+				var table=document.getElementById("lstNotes");
+				th = new Array('Type', 'Note');
+		    	addTh(table, th, 'thAction');
+		    	var table=document.getElementById("lstNotes");
+			    $.each(data, function(index, element) {
+			    	el= new Array(element.type, element.note);
+			    	addRowLink(table, 'action', el, 'url&pa=');
+			    });
+			});
+		});
+	$('#modLstNotes').on('hidden.bs.modal', function (e) {
+		$('.action').remove();
+		$('.thAction').remove();
+		});
+});
+  
+</script>
+<!-- jQuery -->
+
+</body>
+</html>
+  

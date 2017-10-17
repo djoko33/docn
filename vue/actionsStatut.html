@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <title>PA DOCN</title>  
+	<!-- jQuery -->
+	<script src="../../assets/js/jquery-2.2.4.min.js"></script>
+	
+	<!-- Bootstrap -->
+	<script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+	<link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+	<!--link rel="stylesheet" href="css/main.css" type="text/css"-->
+	
+</head>
+<body id="myPage">
+<div class="container">
+<!--  row -->
+	<div class="row">
+	    <div class="col-sm-3">
+		     <p><a href="../index.html"><span class="glyphicon glyphicon-home"></span></a></p>
+	    </div>
+	    <div class="col-sm-9">
+		    <p id="titre">Actions par Groupe Principal et par Statut</p>
+	    </div>
+	<p id="t"></p>
+	</div>
+	<br>
+<!--  row -->
+  <div class="row">
+    <div class="col-sm-7">
+		<table id="countActionsParGaParStatut" class="table table-hover table-condensed">
+			  <tr>
+			    <th>Actions</th>
+			    <th>NOUVEAU</th>
+			    <th>NOTFPRI</th>
+			    <th>NOTFSEC</th>
+			    <th>ACCPRI</th>
+			    <th>ACCSEC</th>
+			    <th>ATTCLOT</th>
+			    <th>CLOTURE</th>
+			    <th>ANNULE</th>  
+			  </tr>
+		</table>      
+    </div>
+    <div class="col-sm-5">
+    </div>
+  </div>
+</div>
+
+<script src="../../../assets/js/jquery-2.2.4.min.js"></script>
+<script src="../js/docn.js"></script>
+<script>
+$(document).ready(function(){
+	$.getJSON('../contr/getCountActionsParGaParStatut.php', function(data) {
+		var table=document.getElementById("countActionsParGaParStatut");
+	    $.each(data, function(index, element) {
+	    	el= new Array(element.ga, element.NOUVEAU, element.NOTFPRI, element.NOTFSEC, element.ACCPRI, element.ACCSEC, element.ATTCLOT, element.CLOTURE, element.ANNULE);
+	    	addRowLinkStatutActions(table, 'pa', el, 'lstActions.html?ga=', el[0]);
+	    });
+	});   
+});
+  
+</script>
+<!-- jQuery -->
+
+</body>
+</html>
+  

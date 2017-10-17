@@ -1,0 +1,48 @@
+CREATE TABLE public.pa
+(
+  num integer,
+  disc character varying(5),
+  libelle character varying(255),
+  creation date,
+  echeance date,
+  ga character varying(10),
+  statut character varying(20),
+  datestatut date
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.pa
+  OWNER TO postgres;
+CREATE TABLE public.notes
+(
+  pa integer,
+  type character varying(1),
+  note text
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.notes
+  OWNER TO postgres;
+
+CREATE TABLE public.actions
+(
+  pa integer,
+  disc character varying(10),
+  num integer,
+  libelle character varying(255),
+  echeance date,
+  gaprimaire character varying(20),
+  gasecondaire character varying(20),
+  affecte character varying(255),
+  statut character varying(20),
+  datestatut date,
+  active boolean
+)
+WITH (
+  OIDS=FALSE
+);
+ALTER TABLE public.actions
+  OWNER TO postgres;
+

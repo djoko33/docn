@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="ISO-8859-1">
+	<link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+<title>Liste des PA pour un groupe d'alerte</title>
+</head>
+<body>
+<div class="container">
+<!--  row -->
+<div class="row">
+    <div class="col-sm-3">
+	     <p><a href="../index.html"><span class="glyphicon glyphicon-home"></span></a></p>
+    </div>
+    <div class="col-sm-9">
+	    <p id="titre"></p>
+    </div>
+<p id="titre"></p>
+</div>
+<!--  row -->
+<br><br>
+<table id="lstPa" class="table table-hover table-condensed">
+  <tr>
+    <th>PA</th>
+    <th>DISC</th>
+    <th>LIBELLE</th>
+    <th>CREATION</th>
+    <th>ECHEANCE</th>
+    <th></th> 
+  </tr>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="modLstActions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <table id="lstActions" class="table table-hover table-condensed"></table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Notes -->
+<div class="modal fade" id="modLstNotes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <table id="lstNotes" class="table table-hover table-condensed"></table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- js -->
+<script src="../../assets/js/jquery-2.2.4.min.js"></script>
+<script src="../js/docn.js"></script>
+<!-- Bootstrap -->
+<script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+
+<script>
+var ga=getQuerystring('ga');
+$(document).ready(function() {
+	$('#titre').html("PA pour le groupe : "+ga);
+	$.getJSON('../contr/getPaParGa.php?ga='+ga, function(data) {
+		var table=document.getElementById("lstPa");
+	    $.each(data, function(index, element) {
+	    	el= new Array(element.num, element.disc, element.libelle, element.creation, element.echeance);
+	    	addRowLinkButton(table, 'pa', el, 'url', el[0], '#modLstActions', '#modLstNotes');
+	    });
+	});
+	$('#modLstActions').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget) 
+		  var pa = button.data('whatever') 
+		  var modal = $(this)
+		  modal.find('.modal-title').text('PA : ' + pa);
+		  $.getJSON('../contr/getActionsParPa.php?pa='+pa, function(data) {
+				var table=document.getElementById("lstActions");
+				th = new Array('Num.', 'Libelle', 'echeance', 'GA princ.', 'GA Second.');
+		    	addTh(table, th, 'thAction');
+		    	var table=document.getElementById("lstActions");
+			    $.each(data, function(index, element) {
+			    	el= new Array(element.num, element.libelle, element.echeance, element.gaprimaire, element.gasecondaire);
+			    	addRowLink(table, 'action', el, 'url&pa=');
+			    });
+			});
+		});
+	$('#modLstActions').on('hidden.bs.modal', function (e) {
+		$('.action').remove();
+		$('.thAction').remove();
+		});
+	$('#modLstNotes').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget) 
+		  var pa = button.data('whatever') 
+		  var modal = $(this)
+		  modal.find('.modal-title').text('PA : ' + pa);
+		  $.getJSON('../contr/getNotesParPa.php?pa='+pa, function(data) {
+				var table=document.getElementById("lstNotes");
+				th = new Array('Type', 'Note');
+		    	addTh(table, th, 'thAction');
+		    	var table=document.getElementById("lstNotes");
+			    $.each(data, function(index, element) {
+			    	el= new Array(element.type, element.note);
+			    	addRowLink(table, 'action', el, 'url&pa=');
+			    });
+			});
+		});
+	$('#modLstNotes').on('hidden.bs.modal', function (e) {
+		$('.action').remove();
+		$('.thAction').remove();
+		});
+});
+  </script>
+</body>
+</html>

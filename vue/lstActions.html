@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/docn.css" type="text/css">
+	<title>Actions pour un groupe et affichages des échéances</title>
+</head>
+<body>
+<div class="container">
+<!--  row -->
+<div class="row">
+    <div class="col-sm-3">
+	     <p><a href="../index.html"><span class="glyphicon glyphicon-home fa-4x"></span></a></p>
+    </div>
+    <div class="col-sm-9">
+	    <p id="titre"></p>
+    </div>
+<p id="titre"></p>
+</div>
+<!--  row -->
+<br>
+<span class="label label-danger">En Retard</span>
+<table id="lstPaRetard" class="table table-hover table-condensed">
+  <tr>
+    <th>PA</th>
+    <th>N&deg; ACTION</th>
+    <th>DISC</th>
+    <th>GA SEC</th>
+    <th>LIBELLE</th>
+    <th>STATUT</th>
+    <th>ECHEANCE</th>
+    <th></th> 
+  </tr>
+</table>
+
+<span class="label label-warning">Echeance dans un mois</span>
+<table id="lstPa1Mois" class="table table-hover table-condensed">
+  <tr>
+    <th>PA</th>
+    <th>N&deg; ACTION</th>
+    <th>DISC</th>
+    <th>GA SEC</th>
+    <th>LIBELLE</th>
+    <th>STATUT</th>
+    <th>ECHEANCE</th>
+    <th></th> 
+  </tr>
+</table>
+
+<span class="label label-info">Echeance dans 3 mois</span>
+<table id="lstPa3Mois" class="table table-hover table-condensed">
+  <tr>
+    <th>PA</th>
+    <th>N&deg; ACTION</th>
+    <th>DISC</th>
+    <th>GA SEC</th>
+    <th>LIBELLE</th>
+    <th>STATUT</th>
+    <th>ECHEANCE</th>
+    <th></th> 
+  </tr>
+</table>
+
+<span class="label label-default">Echeance à plus de 3 mois</span>
+<table id="lstPaSup3Mois" class="table table-hover table-condensed">
+  <tr>
+    <th>PA</th>
+    <th>N&deg; ACTION</th>
+    <th>DISC</th>
+    <th>GA SEC</th>
+    <th>LIBELLE</th>
+    <th>STATUT</th>
+    <th>ECHEANCE</th>
+    <th></th> 
+  </tr>
+</table>
+<!-- Modal Notes -->
+<div class="modal fade" id="modLstNotes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <table id="lstNotes" class="table table-hover table-condensed"></table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- js -->
+<script src="../../assets/js/jquery-2.2.4.min.js"></script>
+<script src="../js/docn.js"></script>
+<!-- Bootstrap -->
+<script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+
+<script>
+var ga=getQuerystring('ga');
+var statut=getQuerystring('statut');
+
+function tabRetardActions(nb, nomTab){
+	$.getJSON('../contr/getActionsParGa.php?ga='+ga+'&ech='+nb+'&statut='+statut, function(data) {
+		var table=document.getElementById(nomTab);
+	    $.each(data, function(index, element) {
+	    	el= new Array(element.pa, element.num, element.disc, element.gasecondaire, element.libelle, element.statut, element.echeance);
+	    	var url = 'https://prod-sdin.edf.fr/eam/domain/startflow.do?IFA_FAVORITE=true&IFA_FLOW_NAME=PassPortPanel&panelid=TIMA010&keydata=';
+	    	addRowLinkButtonActions(table, 'pa', el, url+el[0], el[0], '#modLstNotes');
+	    });
+	});
+}
+$('#titre').html("Actions pour le groupe Principal : "+ga);
+$(document).ready(function() {
+	tabRetardActions(0, 'lstPaRetard');
+	tabRetardActions(1, 'lstPa1Mois');
+	tabRetardActions(3, 'lstPa3Mois');
+	tabRetardActions(1000, 'lstPaSup3Mois');
+	
+	$('#modLstNotes').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget) 
+		  var pa = button.data('whatever') 
+		  var modal = $(this)
+		  modal.find('.modal-title').text('PA : ' + pa);
+		  $.getJSON('../contr/getNotesParPa.php?pa='+pa, function(data) {
+				var table=document.getElementById("lstNotes");
+				th = new Array('Type', 'Note');
+		    	addTh(table, th, 'thAction');
+		    	var table=document.getElementById("lstNotes");
+			    $.each(data, function(index, element) {
+			    	el= new Array(element.type, element.note);
+			    	addRowLink(table, 'action', el, 'url&pa=');
+			    });
+			});
+		});
+	$('#modLstNotes').on('hidden.bs.modal', function (e) {
+		$('.action').remove();
+		$('.thAction').remove();
+		});
+});
+  </script>
+</body>
+</html>

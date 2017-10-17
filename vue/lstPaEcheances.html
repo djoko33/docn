@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="stylesheet" href="../../assets/bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../css/docn.css" type="text/css">
+	<title>PA pour un groupe et affichages des échéances</title>
+</head>
+<body>
+<div class="container">
+<!--  row -->
+<div class="row">
+    <div class="col-sm-3">
+	     <br><p><a href="../index.html"><span class="glyphicon glyphicon-home fa-4x"></span></a></p>
+    </div>
+    <div class="col-sm-9">
+	    <h2 id="titre"></h2>
+    </div>
+</div>
+<!--  row -->
+<br>
+<span class="label label-danger">En Retard</span>
+<table id="lstPaRetard" class="table table-hover table-condensed">
+  <tr>
+    <th>PA</th>
+    <th>DISC</th>
+    <th>LIBELLE</th>
+    <th>STATUT</th>
+    <th>ECHEANCE</th>
+    <th></th> 
+  </tr>
+</table>
+
+<span class="label label-warning">Echeance dans un mois</span>
+<table id="lstPa1Mois" class="table table-hover table-condensed">
+  <tr>
+    <th>PA</th>
+    <th>DISC</th>
+    <th>LIBELLE</th>
+    <th>STATUT</th>
+    <th>ECHEANCE</th>
+    <th></th> 
+  </tr>
+</table>
+
+<span class="label label-info">Echeance dans 3 mois</span>
+<table id="lstPa3Mois" class="table table-hover table-condensed">
+  <tr>
+    <th>PA</th>
+    <th>DISC</th>
+    <th>LIBELLE</th>
+    <th>STATUT</th>
+    <th>ECHEANCE</th>
+    <th></th> 
+  </tr>
+</table>
+
+<span class="label label-default">Echeance &agrave; plus de 3 mois</span>
+<table id="lstPaSup3Mois" class="table table-hover table-condensed">
+  <tr>
+    <th>PA</th>
+    <th>DISC</th>
+    <th>LIBELLE</th>
+    <th>STATUT</th>
+    <th>ECHEANCE</th>
+    <th></th> 
+  </tr>
+</table>
+<!-- Modal -->
+<div class="modal fade" id="modLstActions" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <table id="lstActions" class="table table-hover table-condensed"></table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Modal Notes -->
+<div class="modal fade" id="modLstNotes" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <table id="lstNotes" class="table table-hover table-condensed"></table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+<!-- js -->
+<script src="../../assets/js/jquery-2.2.4.min.js"></script>
+<script src="../js/docn.js"></script>
+<!-- Bootstrap -->
+<script src="../../assets/bootstrap/js/bootstrap.min.js"></script>
+
+<script>
+var ga=getQuerystring('ga');
+var statut=getQuerystring('statut');
+$('#titre').html("PA pour le groupe : "+ga);
+$(document).ready(function() {
+	tabRetard(0, 'lstPaRetard');
+	tabRetard(1, 'lstPa1Mois');
+	tabRetard(3, 'lstPa3Mois');
+	tabRetard(1000, 'lstPaSup3Mois');
+	
+	$('#modLstActions').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget) 
+		  var pa = button.data('whatever') 
+		  var modal = $(this)
+		  modal.find('.modal-title').text('PA : ' + pa);
+		  $.getJSON('../contr/getActionsParPa.php?pa='+pa, function(data) {
+				var table=document.getElementById("lstActions");
+				th = new Array('Num.', 'Libelle', 'echeance', 'GA princ.', 'GA Second.');
+		    	addTh(table, th, 'thAction');
+		    	var table=document.getElementById("lstActions");
+			    $.each(data, function(index, element) {
+			    	el= new Array(element.num, element.libelle, element.echeance, element.gaprimaire, element.gasecondaire);
+			    	addRowLink(table, 'action', el, 'url&pa=');
+			    });
+			});
+		});
+	$('#modLstActions').on('hidden.bs.modal', function (e) {
+		$('.action').remove();
+		$('.thAction').remove();
+		});
+	$('#modLstNotes').on('show.bs.modal', function (event) {
+		  var button = $(event.relatedTarget) 
+		  var pa = button.data('whatever') 
+		  var modal = $(this)
+		  modal.find('.modal-title').text('PA : ' + pa);
+		  $.getJSON('../contr/getNotesParPa.php?pa='+pa, function(data) {
+				var table=document.getElementById("lstNotes");
+				th = new Array('Type', 'Note');
+		    	addTh(table, th, 'thAction');
+		    	var table=document.getElementById("lstNotes");
+			    $.each(data, function(index, element) {
+			    	el= new Array(element.type, element.note);
+			    	addRowLink(table, 'action', el, 'url&pa=');
+			    });
+			});
+		});
+	$('#modLstNotes').on('hidden.bs.modal', function (e) {
+		$('.action').remove();
+		$('.thAction').remove();
+		});
+});
+  </script>
+</body>
+</html>
